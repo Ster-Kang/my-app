@@ -1,0 +1,9 @@
+# 공통
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# docker
+docker-compose.override.yml
+*.log

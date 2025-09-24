@@ -1,0 +1,35 @@
+services:
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host"
+    ports:
+      - "${FRONT_PORT}:5173"
+    environment:
+      # 브라우저가 사용할 API 주소 주입 (Vite는 클라이언트 노출 변수에 VITE_ 접두사 필수)
+      - VITE_API_BASE=${API_BASE}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run start:dev"
+    ports:
+      - "${BACK_PORT}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=3000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    healthcheck:
+      # 컨테이너 내부에서 자기 자신(backend:3000)을 검사
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
