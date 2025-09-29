@@ -14,7 +14,7 @@ async function bootstrap() {
   }));
 
   // 전역 예외 필터
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(app.get(HttpExceptionFilter));
 
   await app.listen(process.env.BACK_PORT ?? 3000);
 }

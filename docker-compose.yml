@@ -23,7 +23,6 @@ services:
       - "${BACK_PORT}:3000"
     environment:
       - NODE_ENV=${NODE_ENV}
-      - PORT=3000
     volumes:
       - ./backend:/app
       - /app/node_modules
